@@ -1,11 +1,10 @@
 class Node
 {
-    int data;
+    int key;
     Node left, right;
 
-    public Node(int item)
-    {
-        data = item;
+    Node(int key) {
+        this.key =key;
         left = right = null;
     }
 }

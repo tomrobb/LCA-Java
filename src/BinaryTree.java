@@ -2,65 +2,96 @@ public class BinaryTree
 {
     Node root;
 
-    Node findLCA(int n1, int n2)
-    {
+    BinaryTree(){
+        Node root;
+    }
+
+
+    Node findNode(int key){
+        return findNode(root,key);
+    }
+
+    Node findNode(Node root, int key) {
+        if (root == null || root.key == key) {
+            return root;
+        }
+
+        if (key > root.key) {
+            return findNode(root.right, key);
+        }
+
+        return findNode(root.left, key);
+    }
+
+    void addNode(int key) {
+        root = addNode(root, key);
+    }
+
+    Node addNode(Node node, int key) {
+        if (node == null) {
+            node = new Node(key);
+            return node;
+        }
+
+        if (key < node.key)
+        {
+            node.left = addNode(node.left, key);
+        }
+        else if (key > node.key)
+        {
+            node.right = addNode(node.right, key);
+        }
+
+        return node;
+    }
+
+    Node findLCA(int n1, int n2) {
         return findLCA(root, n1, n2);
     }
 
-    // function that returns the pointer to the LCA of two given nodes
-    // assumes n1 and n2 are present in the tree
-
     Node findLCA(Node node, int n1, int n2)
     {
-
-        if (node == null)
+        if (node == null) {
             return null;
+        }
 
-        // if n1 or n2 matches match the root, return the root,
-        // since that's the LCA
-        if (node.data == n1 || node.data == n2)
-            return node;
+        // If n1 and n2 < root, then the LCA is on the right
+        if (node.key > n1 && node.key > n2) {
+            return findLCA(node.left, n1, n2);
+        }
 
+        // If n1 and n2 > root, then the LCA is on the right
+        if (node.key < n1 && node.key < n2) {
+            return findLCA(node.right, n1, n2);
+        }
 
-        Node left_lca = findLCA(node.left, n1, n2);
-        Node right_lca = findLCA(node.right, n1, n2);
-
-
-        // if both of the calls above don't return null,
-        // then this is the LCA
-        if (left_lca!=null && right_lca!=null)
-            return node;
-
-        // otherwise check if the left  or right subtree is LCA
-        return (left_lca != null) ? left_lca : right_lca;
+        return node;
     }
 
-
-    // program to test the LCA function
-    public static void main(String[] args) {
-
+    public static void main(String[] args){
+        BinaryTree tree = new BinaryTree();
 
         /* testing for the following binary tree:
-                              1
+                              35
                          /         \
-                        2            3
+                        20            50
                     /       \     /     \
-                  4         5    6        7
+                  10        30    40       70
          */
-        BinaryTree tree = new BinaryTree();
-        tree.root = new Node(1);
-        tree.root.left = new Node(2);
-        tree.root.right = new Node(3);
-        tree.root.left.left = new Node(4);
-        tree.root.left.right = new Node(5);
-        tree.root.right.right = new Node(6);
-        tree.root.right.left = new Node(7);
 
+        tree.addNode(35);
+        tree.addNode(20);
+        tree.addNode(50);
+        tree.addNode(10);
+        tree.addNode(30);
+        tree.addNode(40);
+        tree.addNode(70);
 
-        System.out.println("The LCA of 6 and 7 = " + tree.findLCA(6, 7).data); // 3
-        System.out.println("The LCA of 2 and 6 = " + tree.findLCA(2, 6).data); // 1
-        System.out.println("The LCA of 4 and 5 = " + tree.findLCA(4, 5).data); // 2
-        System.out.println("The LCA of 3 and 7 = " + tree.findLCA(3, 7).data); // 3
+        System.out.print("LCA of 20 and 40: " + tree.findLCA(20, 40).key);
 
     }
+
 }
+
+
+
